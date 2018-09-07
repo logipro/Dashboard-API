@@ -1,38 +1,14 @@
 var express = require("express"),
   ejwt = require("express-jwt"),
-  jwt = require("jsonwebtoken"),
   passport = require("passport"),
   passportConfig = require("./config/passport"),
-  LocalStrategy = require("passport-local").Strategy,
   bodyParser = require("body-parser"),
   app = express(),
   port = process.env.PORT || 3001,
-  config = require("./config"),
-  WebSocket = require("ws");
+  config = require("./config");
 
-//----Webosocket
-const wss = new WebSocket.Server({ port: 8069 });
-exports.wss = wss;
-// Broadcast to all.
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(data));
-    }
-  });
-};
-
-exports.WSBroadcast = wss.broadcast;
-var listOfActiveConnections = [];
-exports.listOfActiveConnections = listOfActiveConnections;
-wss.on("connection", function connection(ws) {
-  listOfActiveConnections.push(ws);
-  wss.broadcast({ type: "serverMsg", msg: "new one joined" });
-  ws.on("message", function incoming(message) {
-    console.log("received: %s", message);
-  });
-});
-//----
+//start up the web socket
+require("./Utils/webSocket");
 
 // check the address
 app.use(function(req, res, next) {
