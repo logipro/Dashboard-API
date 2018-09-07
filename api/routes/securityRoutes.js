@@ -7,7 +7,7 @@ module.exports = function(app) {
 
   app.route("/logout").post(securityController.logout);
 
-  // app.route("/accessibleapps").get(securityController.listofAccessibleApps);
+  app.route("/accessibleapps").get(securityController.listofAccessibleApps);
 
   // app.route("/accessibleapps").get(securityController.listofAccessibleApps);
 

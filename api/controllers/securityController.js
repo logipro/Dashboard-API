@@ -32,12 +32,18 @@ exports.logout = function(req, res) {
   res.json();
 };
 
-// exports.listofAccessibleApps = function(req, res) {
-//   console.log(req.tokenPayload.username);
-//   Security.listOfAccessibleApps(req.tokenPayload.username).then(result => {
-//     res.json(result);
-//   });
-// };
+exports.listofAccessibleApps = function(req, res) {
+  console.log(req.tokenPayload.username);
+  Security.listOfAccessibleApps(req.tokenPayload.username)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
 
 // exports.listOfWidgets = function(req, res) {
 //   console.log(req.tokenPayload.username);

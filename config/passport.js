@@ -21,7 +21,6 @@ module.exports = function(app, passport) {
         FROM tbSecUserPassword AS up JOIN tbSecUser AS u ON up.UserID=u.UserID \
         WHERE u.UserName = ?`,
           [username],
-
           (err, rows) => {
             if (!rows.length) {
               return done(null, false, {
