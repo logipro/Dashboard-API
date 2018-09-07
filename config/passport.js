@@ -1,18 +1,6 @@
 var LocalStrategy = require("passport-local").Strategy,
-  db = require("../sqliteDb"),
+  db = require("../Utils/sqliteDb"),
   crypto = require("../helpers/crypto");
-
-var username = "ashkan";
-db.all(
-  `SELECT u.UserID, u.UserName, up.PasswordHash, up.PasswordSalt \
-  FROM tbSecUserPassword AS up JOIN tbSecUser AS u ON up.UserID=u.UserID \
-  `,
-  [],
-
-  (err, rows) => {
-    console.log(rows);
-  }
-);
 
 // expose this function to our app using module.exports
 module.exports = function(app, passport) {
