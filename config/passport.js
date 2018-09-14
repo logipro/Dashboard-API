@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
         return db.all(
           `SELECT u.UserID, u.UserName, up.PasswordHash, up.PasswordSalt \
         FROM tbSecUserPassword AS up JOIN tbSecUser AS u ON up.UserID=u.UserID \
-        WHERE u.UserName = ?`,
+        WHERE u.UserName = ? AND IsDisabled = 0`,
           [username],
           (err, rows) => {
             if (!rows.length) {
