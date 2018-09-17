@@ -45,6 +45,55 @@ exports.listOfAccessibleApps = function(username) {
   });
 };
 
+exports.listOfUsers = async function() {
+  var query = "SELECT * FROM tbSecUser";
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(rows);
+        resolve(rows);
+      }
+    });
+  });
+};
+
+exports.updateUser = async function(request) {
+  var query =
+    "UPDATE tbSecUser SET " +
+    request.Update +
+    " WHERE USERID = " +
+    request.UserID;
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row(s) updated: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.insertUser = async function(request) {
+  var query = "INSERT INTO tbSecUser " + request.Insert;
+  console.log(query);
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      console.log(err);
+      console.log(runset);
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row inserted: ${this.changes}`);
+      }
+    });
+  });
+};
+
 //db = require("../../../db");
 
 // exports.listOfAccessibleApps = async function(username) {
@@ -70,17 +119,5 @@ exports.listOfAccessibleApps = function(username) {
 //     .catch(err => {
 //       console.error(err);
 //       return err;
-//     });
-// };
-
-// exports.listOfUsers = async function() {
-//   return await new sql.Request(await db.getDBInstance("megatron"))
-//     .query("SELECT * FROM tbSecUser")
-//     .then(result => {
-//       return result.recordset;
-//     })
-//     .catch(err => {
-//       console.error(err);
-//       throw err;
 //     });
 // };

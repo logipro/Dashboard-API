@@ -48,20 +48,42 @@ exports.listofAccessibleApps = function(req, res) {
     });
 };
 
+exports.listOfUsers = function(req, res) {
+  Security.listOfUsers()
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.updateUser = function(req, res) {
+  Security.updateUser(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.insertUser = function(req, res) {
+  Security.insertUser(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
 // exports.listOfWidgets = function(req, res) {
 //   console.log(req.tokenPayload.username);
 //   Security.listOfWidgets(req.tokenPayload.username).then(result => {
 //     res.json(result);
 //   });
-// };
-
-// exports.listOfUsers = function(req, res) {
-//   Security.listOfUsers()
-//     .then(result => {
-//       res.json(result);
-//     })
-//     .catch(err => {
-//       res.status(400);
-//       res.json(err.message);
-//     });
 // };

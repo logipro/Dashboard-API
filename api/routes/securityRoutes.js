@@ -9,9 +9,11 @@ module.exports = function(app) {
 
   app.route("/accessibleapps").get(securityController.listofAccessibleApps);
 
-  // app.route("/accessibleapps").get(securityController.listofAccessibleApps);
+  app.route("/security/users").get(securityController.listOfUsers);
+
+  app.route("/security/users").put(securityController.updateUser);
+
+  app.route("/security/users").post(securityController.insertUser);
 
   // app.route("/dashboard/widgets").get(securityController.listOfWidgets);
-
-  // app.route("/security/users").get(securityController.listOfWidgets);
 };
