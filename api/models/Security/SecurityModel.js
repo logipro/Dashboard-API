@@ -1,4 +1,5 @@
-var db = require("../../../Utils/sqliteDb");
+var db = require("../../../Utils/sqliteDb"),
+  crypto = require("../../../helpers/crypto");
 
 exports.listOfAccessibleApps = function(username) {
   let query = "";
@@ -84,6 +85,33 @@ exports.insertUser = async function(request) {
     db.run(query, [], function(err, runset) {
       console.log(err);
       console.log(runset);
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row inserted: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.changePassword = async function(request) {
+  var cryptoResult = crypto.saltHashPassword(request.password);
+  var query = `INSERT OR Replace INTO tbSecUserPassword  
+  (UserPasswordID, UserID, PasswordHash, PasswordSalt, Expired, CreatedAt) 
+   Values ( 
+  (SELECT UserPasswordID FROM tbSecUserPassword WHERE UserID = ${
+    request.UserID
+  })
+  ,${request.UserID}
+  ,"${cryptoResult.hashedPassword}"
+  ,"${cryptoResult.salt}"
+  ,0
+  ,(SELECT strftime("%Y-%m-%d %H:%M:%S", datetime("now")))
+  )`;
+  //console.log(query);
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
       //console.log(`Row(s) updated: ${this.changes}`);
       if (err) {
         reject(err);

@@ -15,5 +15,6 @@ module.exports = function(app) {
 
   app.route("/security/users").post(securityController.insertUser);
 
+  app.route("/security/userpassword").put(securityController.changePassword);
   // app.route("/dashboard/widgets").get(securityController.listOfWidgets);
 };

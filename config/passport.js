@@ -24,7 +24,7 @@ module.exports = function(app, passport) {
           (err, rows) => {
             if (!rows.length) {
               return done(null, false, {
-                message: "Incorrect username and password."
+                message: "Incorrect username and/or password."
               });
             } else if (
               crypto.saltHashPasswordValidation(
