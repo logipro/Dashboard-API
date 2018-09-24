@@ -94,6 +94,31 @@ exports.changePassword = function(req, res) {
     });
 };
 
+exports.listOfRoles = function(req, res) {
+  //console.log(req);
+  console.log(req.params);
+  Security.listOfRoles(req.params.userID)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.modifyUserRoles = function(req, res) {
+  Security.modifyUserRoles(req.body.userID, req.body.roleID, req.body.isAdd)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
 // exports.listOfWidgets = function(req, res) {
 //   console.log(req.tokenPayload.username);
 //   Security.listOfWidgets(req.tokenPayload.username).then(result => {

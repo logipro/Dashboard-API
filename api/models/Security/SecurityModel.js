@@ -122,6 +122,48 @@ exports.changePassword = async function(request) {
   });
 };
 
+exports.listOfRoles = async function(userID) {
+  var query = "SELECT *, false as IsUsersRole FROM tbSecRole";
+  if (userID && userID >= 0) {
+    query = `SELECT R.*, 
+    CASE WHEN UR.UserID IS NOT NULL THEN true ELSE false END as IsUsersRole
+    FROM tbSecRole R 
+    LEFT JOIN tbSecUserRole UR
+    ON R.RoleID = UR.RoleID
+    AND UR.UserID = ${userID}`;
+  }
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+exports.modifyUserRoles = async function(userID, roleID, isAdd) {
+  var query = "";
+  if (isAdd == "true") {
+    query = `INSERT INTO tbSecUserRole (UserID, RoleID)
+    SELECT ${userID}, ${roleID}`;
+  } else {
+    query = `DELETE FROM tbSecUserRole WHERE UserID = ${userID} AND RoleID = ${roleID}`;
+  }
+  console.log(isAdd);
+  console.log(query);
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row inserted: ${this.changes}`);
+      }
+    });
+  });
+};
+
 //db = require("../../../db");
 
 // exports.listOfAccessibleApps = async function(username) {
