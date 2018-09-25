@@ -23,5 +23,7 @@ module.exports = function(app) {
     .route("/security/modifyUserRoles")
     .post(securityController.modifyUserRoles);
 
+  app.route("/security/roles").post(securityController.insertRole);
+
   // app.route("/dashboard/widgets").get(securityController.listOfWidgets);
 };

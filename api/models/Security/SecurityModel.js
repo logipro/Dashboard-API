@@ -39,7 +39,6 @@ exports.listOfAccessibleApps = function(username) {
         //console.log(err);
         reject(err);
       } else {
-        console.log(rows);
         resolve(rows);
       }
     });
@@ -83,8 +82,6 @@ exports.insertUser = async function(request) {
   console.log(query);
   return new Promise((resolve, reject) => {
     db.run(query, [], function(err, runset) {
-      console.log(err);
-      console.log(runset);
       //console.log(`Row(s) updated: ${this.changes}`);
       if (err) {
         reject(err);
@@ -132,6 +129,7 @@ exports.listOfRoles = async function(userID) {
     ON R.RoleID = UR.RoleID
     AND UR.UserID = ${userID}`;
   }
+  console.log(query);
   return new Promise((resolve, reject) => {
     db.all(query, [], (err, rows) => {
       if (err) {
@@ -151,10 +149,22 @@ exports.modifyUserRoles = async function(userID, roleID, isAdd) {
   } else {
     query = `DELETE FROM tbSecUserRole WHERE UserID = ${userID} AND RoleID = ${roleID}`;
   }
-  console.log(isAdd);
-  console.log(query);
   return new Promise((resolve, reject) => {
     db.run(query, [], function(err, runset) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row inserted: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.insertRole = async function(request) {
+  var query = "INSERT INTO tbSecRole " + request.Insert;
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
       if (err) {
         reject(err);
       } else {

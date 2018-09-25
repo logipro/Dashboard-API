@@ -119,6 +119,17 @@ exports.modifyUserRoles = function(req, res) {
     });
 };
 
+exports.insertRole = function(req, res) {
+  Security.insertRole(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
 // exports.listOfWidgets = function(req, res) {
 //   console.log(req.tokenPayload.username);
 //   Security.listOfWidgets(req.tokenPayload.username).then(result => {
