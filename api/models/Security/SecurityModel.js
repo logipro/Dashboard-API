@@ -174,6 +174,20 @@ exports.insertRole = async function(request) {
   });
 };
 
+exports.deleteRole = async function(RoleID) {
+  var query = "DELETE FROM tbSecRole WHERE RoleID = " + RoleID;
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row deleted: ${this.changes}`);
+      }
+    });
+  });
+};
+
 //db = require("../../../db");
 
 // exports.listOfAccessibleApps = async function(username) {

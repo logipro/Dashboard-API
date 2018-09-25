@@ -25,5 +25,7 @@ module.exports = function(app) {
 
   app.route("/security/roles").post(securityController.insertRole);
 
+  app.route("/security/roles").delete(securityController.deleteRole);
+
   // app.route("/dashboard/widgets").get(securityController.listOfWidgets);
 };

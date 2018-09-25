@@ -125,6 +125,18 @@ exports.insertRole = function(req, res) {
       res.json(result);
     })
     .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.deleteRole = function(req, res) {
+  Security.deleteRole(req.body.RoleID)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
       res.status(400);
       res.json(err.message);
     });
