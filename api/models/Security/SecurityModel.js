@@ -188,6 +188,54 @@ exports.deleteRole = async function(RoleID) {
   });
 };
 
+exports.listOfRolesApps = async function(RoleID) {
+  var query = `SELECT
+  SA.ApplicationID
+  ,SA.Application
+  ,SA.ParentID
+  ,SA.ShowInNavigationTree
+  ,IFNULL(SA.AppOrder,1000 + SA.ApplicationID) as AppOrder
+,ISPublic
+,SA.Icon
+,SAR.ApplicationRoleID
+  FROM tbSecApplication SA
+  LEFT JOIN tbSecApplicationRole SAR ON SA.ApplicationID = SAR.ApplicationID
+ AND (ISPublic = 1 OR SAR.RoleID = ${RoleID})
+  ORDER BY IFNULL(SA.AppOrder,1000 + SA.ApplicationID)`;
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+exports.modifyRoleApps = async function(
+  RoleID,
+  ApplicationID,
+  ApplicationRoleID
+) {
+  var query = "";
+  if (ApplicationRoleID === null) {
+    query = `INSERT INTO tbSecApplicationRole (ApplicationID, RoleID)
+    SELECT ${ApplicationID}, ${RoleID}`;
+  } else {
+    query = `DELETE FROM tbSecApplicationRole WHERE ApplicationRoleID = ${ApplicationRoleID}`;
+  }
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row modified: ${this.changes}`);
+      }
+    });
+  });
+};
+
 //db = require("../../../db");
 
 // exports.listOfAccessibleApps = async function(username) {

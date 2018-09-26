@@ -142,6 +142,36 @@ exports.deleteRole = function(req, res) {
     });
 };
 
+exports.listOfRolesApps = function(req, res) {
+  //console.log(req);
+  console.log(req.params);
+  Security.listOfRolesApps(req.params.roleID)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.modifyRoleApps = function(req, res) {
+  console.log(req.body);
+  Security.modifyRoleApps(
+    req.body.RoleID,
+    req.body.ApplicationID,
+    req.body.ApplicationRoleID
+  )
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
 // exports.listOfWidgets = function(req, res) {
 //   console.log(req.tokenPayload.username);
 //   Security.listOfWidgets(req.tokenPayload.username).then(result => {

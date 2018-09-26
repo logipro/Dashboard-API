@@ -27,5 +27,11 @@ module.exports = function(app) {
 
   app.route("/security/roles").delete(securityController.deleteRole);
 
+  app
+    .route("/security/rolesApps/:roleID")
+    .get(securityController.listOfRolesApps);
+
+  app.route("/security/modifyRoleApps").post(securityController.modifyRoleApps);
+
   // app.route("/dashboard/widgets").get(securityController.listOfWidgets);
 };
