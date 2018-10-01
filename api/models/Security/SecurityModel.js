@@ -48,15 +48,16 @@ exports.listOfAccessibleApps = function(username) {
 exports.listOfAccessibleWidgets = function(username) {
   let query = "";
   if (username === "guest") {
-    query = `SELECT *
+    query = `SELECT *,1 AS IsVisible, W.WidgetID as WidgetOrder
     FROM tbDshWidget W
     WHERE IsPublic > 0 `;
   } else {
-    query = `SELECT Distinct W.* 
+    query = `SELECT Distinct W.*, IFNULL(L.IsVisible,1) AS IsVisible, IFNULL(L.WidgetOrder, W.WidgetID) AS WidgetOrder
     FROM tbDshWidget W
     LEFT JOIN tbDshWidgetRole WR ON W.WidgetID = WR.WidgetID
     LEFT JOIN tbSecUserRole UR ON UR.RoleID = WR.RoleID
     LEFT JOIN tbSecUser U ON U.UserID = UR.UserID AND U.UserName LIKE '${username}'
+    LEFT JOIN tbDshUserLayout L on UR.UserRoleID = L.UserRoleID AND L.WidgetRoleID = WR.WidgetRoleID
     WHERE (ISPublic = 1 OR U.UserID IS NOT NULL) `;
   }
   return new Promise((resolve, reject) => {
