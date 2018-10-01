@@ -9,6 +9,10 @@ module.exports = function(app) {
 
   app.route("/accessibleapps").get(securityController.listofAccessibleApps);
 
+  app
+    .route("/dashboard/widgets")
+    .get(securityController.listofAccessibleWidgets);
+
   app.route("/security/users").get(securityController.listOfUsers);
 
   app.route("/security/users").put(securityController.updateUser);
@@ -33,5 +37,11 @@ module.exports = function(app) {
 
   app.route("/security/modifyRoleApps").post(securityController.modifyRoleApps);
 
-  // app.route("/dashboard/widgets").get(securityController.listOfWidgets);
+  app
+    .route("/security/rolesWidgets/:roleID")
+    .get(securityController.listOfRolesWidgets);
+
+  app
+    .route("/security/modifyRoleWidgets")
+    .post(securityController.modifyRoleWidgets);
 };

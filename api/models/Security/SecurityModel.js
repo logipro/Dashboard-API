@@ -16,7 +16,7 @@ exports.listOfAccessibleApps = function(username) {
              FROM tbSecApplication SA WHERE IsPublic = 1
              ORDER BY IFNULL(SA.AppOrder,1000 + SA.ApplicationID) `;
   } else {
-    query = `SELECT
+    query = `SELECT DISTINCT
         SA.ApplicationID
         ,SA.Application
         ,SA.RouteName as [Path]
@@ -32,6 +32,32 @@ exports.listOfAccessibleApps = function(username) {
         LEFT JOIN tbSecUser U ON U.UserID = UR.UserID AND U.UserName LIKE '${username}'
         WHERE (ISPublic = 1 OR U.UserID IS NOT NULL)
         ORDER BY IFNULL(SA.AppOrder,1000 + SA.ApplicationID) `;
+  }
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        //console.log(err);
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+exports.listOfAccessibleWidgets = function(username) {
+  let query = "";
+  if (username === "guest") {
+    query = `SELECT *
+    FROM tbDshWidget W
+    WHERE IsPublic > 0 `;
+  } else {
+    query = `SELECT Distinct W.* 
+    FROM tbDshWidget W
+    LEFT JOIN tbDshWidgetRole WR ON W.WidgetID = WR.WidgetID
+    LEFT JOIN tbSecUserRole UR ON UR.RoleID = WR.RoleID
+    LEFT JOIN tbSecUser U ON U.UserID = UR.UserID AND U.UserName LIKE '${username}'
+    WHERE (ISPublic = 1 OR U.UserID IS NOT NULL) `;
   }
   return new Promise((resolve, reject) => {
     db.all(query, [], (err, rows) => {
@@ -175,11 +201,12 @@ exports.insertRole = async function(request) {
 };
 
 exports.deleteRole = async function(RoleID) {
-  var query = "DELETE FROM tbSecRole WHERE RoleID = " + RoleID;
+  var query = `DELETE FROM tbSecRole WHERE RoleID = ` + RoleID;
   return new Promise((resolve, reject) => {
     db.run(query, [], function(err, runset) {
       //console.log(`Row(s) updated: ${this.changes}`);
       if (err) {
+        console.log(err);
         reject(err);
       } else {
         resolve(`Row deleted: ${this.changes}`);
@@ -236,30 +263,37 @@ exports.modifyRoleApps = async function(
   });
 };
 
-//db = require("../../../db");
+exports.listOfRolesWidgets = async function(RoleID) {
+  var query = `SELECT DW.* ,WR.WidgetRoleID
+  FROM tbDshWidget DW
+    LEFT JOIN tbDshWidgetRole WR ON DW.WidgetID = WR.WidgetID
+   AND (ISPublic = 1 OR WR.RoleID = ${RoleID})`;
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
 
-// exports.listOfAccessibleApps = async function(username) {
-//   return await new sql.Request(await db.getDBInstance("shopfloor"))
-//     .input("username", sql.VarChar, username)
-//     .execute("spSecGetAccessibleApps")
-//     .then(result => {
-//       return result.recordset;
-//     })
-//     .catch(err => {
-//       console.error(err);
-//       return err;
-//     });
-// };
-
-// exports.listOfWidgets = async function(username) {
-//   return await new sql.Request(await db.getDBInstance("shopfloor"))
-//     .input("username", sql.VarChar, username)
-//     .execute("spSecGetWidgets")
-//     .then(result => {
-//       return result.recordset;
-//     })
-//     .catch(err => {
-//       console.error(err);
-//       return err;
-//     });
-// };
+exports.modifyRoleWidgets = async function(RoleID, WidgetID, WidgetRoleID) {
+  var query = "";
+  if (WidgetRoleID === null) {
+    query = `INSERT INTO tbDshWidgetRole (WidgetID, RoleID)
+    SELECT ${WidgetID}, ${RoleID}`;
+  } else {
+    query = `DELETE FROM tbDshWidgetRole WHERE WidgetRoleID = ${WidgetRoleID}`;
+  }
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row modified: ${this.changes}`);
+      }
+    });
+  });
+};

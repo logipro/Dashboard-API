@@ -38,8 +38,19 @@ exports.logout = function(req, res) {
 };
 
 exports.listofAccessibleApps = function(req, res) {
-  console.log(req.tokenPayload.username);
   Security.listOfAccessibleApps(req.tokenPayload.username)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.listofAccessibleWidgets = function(req, res) {
+  Security.listOfAccessibleWidgets(req.tokenPayload.username)
     .then(result => {
       res.json(result);
     })
@@ -137,6 +148,7 @@ exports.deleteRole = function(req, res) {
       res.json(result);
     })
     .catch(err => {
+      console.log(err);
       res.status(400);
       res.json(err.message);
     });
@@ -172,9 +184,31 @@ exports.modifyRoleApps = function(req, res) {
     });
 };
 
-// exports.listOfWidgets = function(req, res) {
-//   console.log(req.tokenPayload.username);
-//   Security.listOfWidgets(req.tokenPayload.username).then(result => {
-//     res.json(result);
-//   });
-// };
+exports.listOfRolesWidgets = function(req, res) {
+  Security.listOfRolesWidgets(req.params.roleID)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.modifyRoleWidgets = function(req, res) {
+  console.log(req.body);
+  Security.modifyRoleWidgets(
+    req.body.RoleID,
+    req.body.WidgetID,
+    req.body.WidgetRoleID
+  )
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
