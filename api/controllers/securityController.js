@@ -5,13 +5,12 @@ var Security = require("../models/Security/SecurityModel"),
 
 exports.getGuestToken = function(req, res) {
   res.json({
-    token: jwt.sign({ id: 0, username: "guest" }, config.jwt_secret),
+    token: jwt.sign({ id: -1, username: "guest" }, config.jwt_secret),
     userID: -1
   });
 };
 
 exports.login = function(req, res, next) {
-  console.log("login request received");
   passport.authenticate("local", function(err, user, info) {
     if (err) return next(err);
     if (!user) {
@@ -50,7 +49,7 @@ exports.listofAccessibleApps = function(req, res) {
 };
 
 exports.listofAccessibleWidgets = function(req, res) {
-  Security.listOfAccessibleWidgets(req.tokenPayload.username)
+  Security.listOfAccessibleWidgets(req.tokenPayload.id)
     .then(result => {
       res.json(result);
     })
@@ -203,6 +202,18 @@ exports.modifyRoleWidgets = function(req, res) {
     req.body.WidgetID,
     req.body.WidgetRoleID
   )
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.modifyUserWidgetLayout = function(req, res) {
+  Security.modifyUserWidgetLayout(req.tokenPayload.id, req.body.Widgets)
     .then(result => {
       res.json(result);
     })

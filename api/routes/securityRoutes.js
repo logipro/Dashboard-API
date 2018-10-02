@@ -44,4 +44,8 @@ module.exports = function(app) {
   app
     .route("/security/modifyRoleWidgets")
     .post(securityController.modifyRoleWidgets);
+
+  app
+    .route("/modifyUserWidgetLayout")
+    .post(securityController.modifyUserWidgetLayout);
 };

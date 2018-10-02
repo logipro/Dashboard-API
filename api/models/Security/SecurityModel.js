@@ -45,20 +45,24 @@ exports.listOfAccessibleApps = function(username) {
   });
 };
 
-exports.listOfAccessibleWidgets = function(username) {
+exports.listOfAccessibleWidgets = function(userID) {
+  console.log(userID);
   let query = "";
-  if (username === "guest") {
+  if (userID < 0) {
     query = `SELECT *,1 AS IsVisible, W.WidgetID as WidgetOrder
     FROM tbDshWidget W
     WHERE IsPublic > 0 `;
   } else {
     query = `SELECT Distinct W.*, IFNULL(L.IsVisible,1) AS IsVisible, IFNULL(L.WidgetOrder, W.WidgetID) AS WidgetOrder
     FROM tbDshWidget W
-    LEFT JOIN tbDshWidgetRole WR ON W.WidgetID = WR.WidgetID
-    LEFT JOIN tbSecUserRole UR ON UR.RoleID = WR.RoleID
-    LEFT JOIN tbSecUser U ON U.UserID = UR.UserID AND U.UserName LIKE '${username}'
-    LEFT JOIN tbDshUserLayout L on UR.UserRoleID = L.UserRoleID AND L.WidgetRoleID = WR.WidgetRoleID
-    WHERE (ISPublic = 1 OR U.UserID IS NOT NULL) `;
+    JOIN tbDshWidgetRole WR ON W.WidgetID = WR.WidgetID
+    JOIN tbSecUserRole UR ON UR.RoleID = WR.RoleID AND UR.UserID = ${userID}
+    LEFT JOIN tbDshUserLayout L on W.WidgetID = L.WidgetID AND L.UserID = ${userID}
+    UNION 
+    SELECT W.*, IFNULL(L.IsVisible,1) AS IsVisible, IFNULL(L.WidgetOrder, W.WidgetID) AS WidgetOrder
+    FROM tbDshWidget W
+    LEFT JOIN tbDshUserLayout L on W.WidgetID = L.WidgetID AND L.UserID = ${userID}
+    WHERE IsPublic > 0 `;
   }
   return new Promise((resolve, reject) => {
     db.all(query, [], (err, rows) => {
@@ -294,6 +298,44 @@ exports.modifyRoleWidgets = async function(RoleID, WidgetID, WidgetRoleID) {
         reject(err);
       } else {
         resolve(`Row modified: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.modifyUserWidgetLayout = async function(userID, widgets) {
+  //first delete user's current layout
+  var query = `DELETE FROM tbDshUserLayout 
+  WHERE UserID = ${userID}`;
+
+  //add the new layout statement
+  var insertStatement =
+    "INSERT INTO tbDshUserLayout (UserID, WidgetID, WidgetOrder, IsVisible)";
+  widgets.forEach(w => {
+    console.log(w);
+    insertStatement += ` SELECT  ${userID}, ${w.WidgetID}, ${w.widgetOrder}, ${
+      w.isVisible
+    } UNION `;
+  });
+  //--remove the last UNION
+  insertStatement = insertStatement.substring(0, insertStatement.length - 6);
+  console.log(insertStatement);
+  //---
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      if (err) {
+        console.log("first step : " + err);
+        reject(err);
+      } else {
+        db.run(insertStatement, [], function(err, runset) {
+          if (err) {
+            console.log(insertStatement);
+            console.log("second step : " + err);
+            reject(err);
+          } else {
+            resolve("saved");
+          }
+        });
       }
     });
   });
