@@ -51,8 +51,8 @@ passportConfig(app, passport);
 var securityRoutes = require("./api/routes/securityRoutes");
 securityRoutes(app);
 
-//var dashboardRoutes = require("./api/routes/dashboardRoutes");
-//dashboardRoutes(app);
+var dashboardRoutes = require("./api/routes/dashboardRoutes");
+dashboardRoutes(app);
 
 app.use(function(req, res) {
   res.status(404).send({ url: req.originalUrl + " not found" });
