@@ -32,7 +32,7 @@ exports.logout = function(req, res) {
   console.log(`${req.tokenPayload.username} is logging out.`);
   //return a guest token
   res.json({
-    token: jwt.sign({ id: 0, username: "guest" }, config.jwt_secret)
+    token: jwt.sign({ id: -1, username: "guest" }, config.jwt_secret)
   });
 };
 
