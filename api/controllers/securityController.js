@@ -20,7 +20,7 @@ exports.login = function(req, res, next) {
         token: jwt.sign(
           { id: user.UserID, username: user.UserName },
           config.jwt_secret,
-          { expiresIn: 600000 }
+          { expiresIn: config.tokenExpiry }
         ),
         userID: user.UserID
       });
