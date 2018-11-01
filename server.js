@@ -5,7 +5,9 @@ var express = require("express"),
   bodyParser = require("body-parser"),
   app = express(),
   port = process.env.PORT || 3001,
-  config = require("./config");
+  config = require("./config"),
+  https = require("https"),
+  fs = require("fs");
 
 //start up the web socket
 require("./Utils/webSocket");
@@ -59,12 +61,20 @@ app.use(function(req, res) {
 });
 
 // Start server
-var server = app.listen(port, function() {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log(
-    "Dashboard RESTful API server started on http://%s:%s",
-    host,
-    port
-  );
-});
+var server = https
+  .createServer(
+    {
+      key: fs.readFileSync("./HTTPSCerts/server.key"),
+      cert: fs.readFileSync("./HTTPSCerts/server.cert")
+    },
+    app
+  )
+  .listen(port, function() {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log(
+      "Dashboard RESTful API server started on https://%s:%s",
+      host,
+      port
+    );
+  });
