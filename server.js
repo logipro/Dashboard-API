@@ -61,15 +61,16 @@ app.use(function(req, res) {
 });
 
 // Start server
-var server = https
+var server = /*https
   .createServer(
     {
       key: fs.readFileSync("./HTTPSCerts/server.key"),
       cert: fs.readFileSync("./HTTPSCerts/server.cert")
     },
     app
-  )
-  .listen(port, function() {
+  )*/ app.listen(
+  port,
+  function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log(
@@ -77,4 +78,5 @@ var server = https
       host,
       port
     );
-  });
+  }
+);
