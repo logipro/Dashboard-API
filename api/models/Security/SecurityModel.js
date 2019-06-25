@@ -100,6 +100,7 @@ exports.updateUser = async function(request) {
     db.run(query, [], function(err, runset) {
       //console.log(`Row(s) updated: ${this.changes}`);
       if (err) {
+        console.log(err);
         reject(err);
       } else {
         resolve(`Row(s) updated: ${this.changes}`);
@@ -115,6 +116,7 @@ exports.insertUser = async function(request) {
     db.run(query, [], function(err, runset) {
       //console.log(`Row(s) updated: ${this.changes}`);
       if (err) {
+        console.log(err);
         reject(err);
       } else {
         resolve(`Row inserted: ${this.changes}`);
