@@ -83,7 +83,7 @@ exports.listOfUsers = async function() {
       if (err) {
         reject(err);
       } else {
-        console.log(rows);
+        //console.log(rows);
         resolve(rows);
       }
     });
@@ -111,7 +111,7 @@ exports.updateUser = async function(request) {
 
 exports.insertUser = async function(request) {
   var query = "INSERT INTO tbSecUser " + request.Insert;
-  console.log(query);
+  //console.log(query);
   return new Promise((resolve, reject) => {
     db.run(query, [], function(err, runset) {
       //console.log(`Row(s) updated: ${this.changes}`);
@@ -126,6 +126,7 @@ exports.insertUser = async function(request) {
 };
 
 exports.changePassword = async function(request) {
+  console.log(request);
   var cryptoResult = crypto.saltHashPassword(request.password);
   var query = `INSERT OR Replace INTO tbSecUserPassword  
   (UserPasswordID, UserID, PasswordHash, PasswordSalt, Expired, CreatedAt) 

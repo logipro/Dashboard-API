@@ -19,9 +19,10 @@ module.exports = function(app, passport) {
         return db.all(
           `SELECT u.UserID, u.UserName, up.PasswordHash, up.PasswordSalt \
         FROM tbSecUserPassword AS up JOIN tbSecUser AS u ON up.UserID=u.UserID \
-        WHERE u.UserName = ? AND IsDisabled = 0`,
+        WHERE u.UserName = ? AND (IsDisabled = 0 OR ISDisabled = "false")`,
           [username],
           (err, rows) => {
+            console.log(err);
             if (!rows.length) {
               return done(null, false, {
                 message: "Incorrect username and/or password."
