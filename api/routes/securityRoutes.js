@@ -13,11 +13,11 @@ module.exports = function(app) {
     .route("/dashboard/widgets")
     .get(securityController.listofAccessibleWidgets);
 
-  app.route("/security/users").get(securityController.listOfUsers);
-
-  app.route("/security/users").put(securityController.updateUser);
-
-  app.route("/security/users").post(securityController.insertUser);
+  app
+    .route("/security/users")
+    .get(securityController.listOfUsers)
+    .put(securityController.updateUser)
+    .post(securityController.insertUser);
 
   app.route("/security/userpassword").put(securityController.changePassword);
 
@@ -27,9 +27,10 @@ module.exports = function(app) {
     .route("/security/modifyUserRoles")
     .post(securityController.modifyUserRoles);
 
-  app.route("/security/roles").post(securityController.insertRole);
-
-  app.route("/security/roles").delete(securityController.deleteRole);
+  app
+    .route("/security/roles")
+    .post(securityController.insertRole)
+    .delete(securityController.deleteRole);
 
   app
     .route("/security/rolesApps/:roleID")
@@ -48,4 +49,18 @@ module.exports = function(app) {
   app
     .route("/modifyUserWidgetLayout")
     .post(securityController.modifyUserWidgetLayout);
+
+  app
+    .route("/security/apps")
+    .get(securityController.listOfApps)
+    .post(securityController.insertApp)
+    .delete(securityController.deleteApp)
+    .put(securityController.updateApp);
+
+  app
+    .route("/security/widgets")
+    .get(securityController.listOfWidgets)
+    .post(securityController.insertWidget)
+    .delete(securityController.deleteWidget)
+    .put(securityController.updateWidget);
 };

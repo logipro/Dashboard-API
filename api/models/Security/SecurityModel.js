@@ -316,8 +316,8 @@ exports.modifyUserWidgetLayout = async function(userID, widgets) {
     "INSERT INTO tbDshUserLayout (UserID, WidgetID, WidgetOrder, IsVisible)";
   widgets.forEach(w => {
     console.log(w);
-    insertStatement += ` SELECT  ${userID}, ${w.WidgetID}, ${w.widgetOrder}, ${
-      w.isVisible
+    insertStatement += ` SELECT  ${userID}, ${w.WidgetID}, ${w.WidgetOrder}, ${
+      w.IsVisible
     } UNION `;
   });
   //--remove the last UNION
@@ -339,6 +339,130 @@ exports.modifyUserWidgetLayout = async function(userID, widgets) {
             resolve("saved");
           }
         });
+      }
+    });
+  });
+};
+
+exports.listOfApps = async function() {
+  var query = "SELECT * from tbSecApplication";
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+exports.insertApp = async function(request) {
+  var query = "INSERT INTO tbSecApplication " + request.Insert;
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row inserted: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.deleteApp = async function(ApplicationID) {
+  var query =
+    `DELETE FROM tbSecApplication WHERE ApplicationID = ` + ApplicationID;
+  console.log(query);
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(`Row deleted: ${this.changes}`);
+      }
+    });
+  });
+};
+exports.updateApp = async function(request) {
+  var query =
+    "UPDATE tbSecApplication SET " +
+    request.Update +
+    " WHERE ApplicationID = " +
+    request.ApplicationID;
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(`Row(s) updated: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.listOfWidgets = async function() {
+  var query = "SELECT * from tbDshWidget";
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+exports.insertWidget = async function(request) {
+  var query = "INSERT INTO tbDshWidget " + request.Insert;
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(`Row inserted: ${this.changes}`);
+      }
+    });
+  });
+};
+
+exports.deleteWidget = async function(WidgetID) {
+  var query = `DELETE FROM tbDshWidget WHERE WidgetID = ` + WidgetID;
+  console.log(query);
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(`Row deleted: ${this.changes}`);
+      }
+    });
+  });
+};
+exports.updateWidget = async function(request) {
+  var query =
+    "UPDATE tbDshWidget SET " +
+    request.Update +
+    " WHERE WidgetID = " +
+    request.WidgetID;
+  console.log(query);
+  return new Promise((resolve, reject) => {
+    db.run(query, [], function(err, runset) {
+      //console.log(`Row(s) updated: ${this.changes}`);
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(`Row(s) updated: ${this.changes}`);
       }
     });
   });

@@ -223,3 +223,95 @@ exports.modifyUserWidgetLayout = function(req, res) {
       res.json(err.message);
     });
 };
+
+exports.listOfApps = function(req, res) {
+  Security.listOfApps()
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+exports.insertApp = function(req, res) {
+  Security.insertApp(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.deleteApp = function(req, res) {
+  Security.deleteApp(req.body.ApplicationID)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.updateApp = function(req, res) {
+  Security.updateApp(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.listOfWidgets = function(req, res) {
+  Security.listOfWidgets()
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+exports.insertWidget = function(req, res) {
+  Security.insertWidget(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.deleteWidget = function(req, res) {
+  Security.deleteWidget(req.body.WidgetID)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.json(err.message);
+    });
+};
+
+exports.updateWidget = function(req, res) {
+  Security.updateWidget(req.body)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.status(400);
+      res.json(err.message);
+    });
+};
