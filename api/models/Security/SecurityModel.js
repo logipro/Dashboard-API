@@ -13,6 +13,7 @@ exports.listOfAccessibleApps = function(username) {
             ,SA.ParentID
             ,SA.ShowInNavigationTree
             ,IFNULL(SA.AppOrder,1000 + SA.ApplicationID) as AppOrder
+            ,SA.AppProps
              FROM tbSecApplication SA WHERE IsPublic = 1
              ORDER BY IFNULL(SA.AppOrder,1000 + SA.ApplicationID) `;
   } else {
@@ -26,6 +27,7 @@ exports.listOfAccessibleApps = function(username) {
         ,SA.ParentID
         ,SA.ShowInNavigationTree
         ,IFNULL(SA.AppOrder,1000 + SA.ApplicationID) as AppOrder
+        ,SA.AppProps
         FROM tbSecApplication SA
         LEFT JOIN tbSecApplicationRole SAR ON SA.ApplicationID = SAR.ApplicationID
         LEFT JOIN tbSecUserRole UR ON UR.RoleID = SAR.RoleID
