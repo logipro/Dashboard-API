@@ -36,6 +36,22 @@ exports.logout = function(req, res) {
   });
 };
 
+exports.validateToken = function(req, res) {
+  console.log(req.tokenPayload.id);
+  console.log(req.tokenPayload.username);
+  console.log(req.body.userID);
+  console.log(req.body.username);
+  if (
+    req.tokenPayload.id === req.body.userID &&
+    req.tokenPayload.username === req.body.username
+  ) {
+    res.json(true);
+  } else {
+    res.status(401);
+    res.json(false);
+  }
+};
+
 exports.listofAccessibleApps = function(req, res) {
   Security.listOfAccessibleApps(req.tokenPayload.username)
     .then(result => {
