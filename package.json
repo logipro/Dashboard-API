@@ -11,18 +11,18 @@
   "author": "LogiPro",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "express-jwt": "^5.3.1",
     "lodash": "^4.17.15",
-    "mssql": "^5.0.3",
+    "mssql": "^5.1.0",
     "npm": "^6.10.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "sqlite3": "^4.0.6",
-    "ws": "^6.2.0"
+    "sqlite3": "^4.0.9",
+    "ws": "^7.1.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.19.1"
   }
 }
