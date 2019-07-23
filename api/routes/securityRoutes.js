@@ -7,7 +7,7 @@ module.exports = function(app) {
 
   app.route("/logout").post(securityController.logout);
 
-  app.route("/validateToken").get(securityController.validateToken);
+  app.route("/validateToken").post(securityController.validateToken);
 
   app.route("/accessibleapps").get(securityController.listofAccessibleApps);
 

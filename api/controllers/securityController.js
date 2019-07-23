@@ -42,7 +42,7 @@ exports.validateToken = function(req, res) {
   console.log(req.body.userID);
   console.log(req.body.username);
   if (
-    req.tokenPayload.id === req.body.userID &&
+    req.tokenPayload.id.toString() === req.body.userID.toString() &&
     req.tokenPayload.username === req.body.username
   ) {
     res.json(true);
